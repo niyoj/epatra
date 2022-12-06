@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+    server: 
+        build: ./backend
+        image: epatro_server
+        volumes:
+          - ./backend:/server/
+        ports:
+          - ${SERVER_PORT}:${SERVER_PORT}
+        expose:
+            - ${SERVER_PORT}
+        command: "python manage.py runserver 0.0.0.0:${SERVER_PORT}"
+
+        env_file:
+            - ./.env
+
+        environment:
+            - POSTGRES_USER=${AUTH_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${AUTH_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${AUTH_POSTGRES_DB}
+            - POSTGRES_PORT=5432
+            - POSTGRES_HOST=db
+        depends_on:
+            - db
+    
+    client:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        image: epatro_client
+        environment:
+            - REACT_APP_SERVER_URL=http://localhost:${SERVER_PORT}
+        
+        ports:
+        - ${FRONTEND_EXPOSE_PORT}:3000
+        
+        volumes:
+            - ./frontend:/frontend
+            - /frontend/node_modules
+
+        depends_on:
+            - server                 
+
+    db:
+        image: postgres:14-alpine
+        environment:
+            - POSTGRES_USER=${AUTH_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${AUTH_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${AUTH_POSTGRES_DB}
+        volumes:
+            - ./db/postgres:/var/lib/postgresql/data/
