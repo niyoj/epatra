@@ -1,7 +1,7 @@
 # ePatra
 
 ### Steps to run the project with docker
-1. Pull the github repository
+1. Clone the github repository
 2. `cd ePatra`
 3. `cp .env.example .env`
 4. `docker compose build`
