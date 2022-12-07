@@ -26,21 +26,18 @@ services:
     
     client:
         build:
-            context: ./frontend
+            context: ./client
             dockerfile: Dockerfile
-        image: epatro_client
-        environment:
-            - REACT_APP_SERVER_URL=http://localhost:${SERVER_PORT}
-        
+        env_file:
+            - ./.env
         ports:
-        - ${FRONTEND_EXPOSE_PORT}:3000
-        
+            - ${FRONTEND_EXPOSE_PORT}:3000
         volumes:
-            - ./frontend:/frontend
-            - /frontend/node_modules
-
+            - ./client:/app/client
+            - /app/client/node_modules
+            - /app/.next
         depends_on:
-            - server                 
+            - server               
 
     db:
         image: postgres:14-alpine
