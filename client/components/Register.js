@@ -172,7 +172,7 @@ const Register = () => {
         {success && (
           <div>
             Click here for{" "}
-            <Link href="\login" className="underline">
+            <Link href="/login" className="underline">
               Login!
             </Link>
           </div>
