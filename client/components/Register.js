@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FormData from "form-data";
 import axios from "axios";
 import Link from "next/link";
+
 const Register = () => {
   const [userData, setUserData] = useState({
     username: "",

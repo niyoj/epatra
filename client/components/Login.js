@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from 'next/link';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -54,15 +55,19 @@ const Login = () => {
     }
 
     return (
-        <form method='post' onSubmit={submitHandler} >
-            <input type='email' name='email' placeholder='Your Email Address' onChange={emailChangeHandler} />
-            <input type='password' name='password' placeholder='Your Password' onChange={passwordChangeHandler} />
-            <button type='submit'>submit</button>
+        <>
+          <GoogleLogin onSuccess={credentialResponse => {console.log(credentialResponse);}} onError={() => {console.log('Login Failed');}} />
 
-            <p className='error'>{error}</p>
+          <form method='post' onSubmit={submitHandler} >
+              <input type='email' name='email' placeholder='Your Email Address' onChange={emailChangeHandler} />
+              <input type='password' name='password' placeholder='Your Password' onChange={passwordChangeHandler} />
+              <button type='submit'>submit</button>
 
-            <Link href='./forgot_password'>Forgot Password ?</Link>
-        </form>
+              <p className='error'>{error}</p>
+
+              <Link href='./forgot_password' className="text-3xl">Forgot Password ?</Link>
+          </form>
+        </>
     );
 }
 
