@@ -65,7 +65,7 @@ const Login = () => {
 
               <p className='error'>{error}</p>
 
-              <Link href='./forgot_password' className="text-3xl">Forgot Password ?</Link>
+              <Link href='./forgot_password' className="text-error">Forgot Password ?</Link>
           </form>
         </>
     );
