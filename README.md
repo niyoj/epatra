@@ -8,3 +8,6 @@
 5. `docker compose up`
 
 > This should spin up the server at SERVER_PORT and frontend at FRONTEND_EXPOSE_PORT defined in the .env file
+
+### Apply migrations
+- Run command `docker compose exec server python manage.py migrate`
