@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 DJANGO_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -50,7 +51,7 @@ THIRD_PARTY_APPS = [
     'cloudinary',
 ]
 
-CUSTOM_APPS = ["auth0"]
+CUSTOM_APPS = ["auth0", "news", "reviews"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 

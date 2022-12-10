@@ -2,13 +2,15 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import React from "react";
+import axios from 'axios'
 
 export default function Home() {
   React.useEffect(() => {
-    fetch("http://localhost:8000/api/v1/auth/test/")
-      .then((res) => res.json())
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err));
+    axios.get('http://localhost:8000/api/v1/auth/test/').then(res => console.log(res))
+    // fetch("http://localhost:8000/api/v1/auth/test/")
+    //   .then((res) => res.json())
+    //   .then((response) => console.log(response))
+    //   .catch((err) => console.log(err));
   }, []);
   return (
     <div className={styles.container}>
@@ -25,7 +27,7 @@ export default function Home() {
 
         <p className={styles.description}>
           Get started by editing{" "}
-          <code className={styles.code}>pages/index.js</code>
+          <code className={styles.code}>anjal bam</code>
         </p>
 
         <div className={styles.grid}>
