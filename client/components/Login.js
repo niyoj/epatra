@@ -52,7 +52,7 @@ const Login = () => {
     }
 
     return (
-        <section className="inline-flex bg-background absolute top-1/2 left-1/2 -translate-y-2/4 -translate-x-2/4 p-8 rounded-md border border-outline">
+        <section className="inline-flex bg-background absolute top-1/2 left-1/2 -translate-y-2/4 -translate-x-2/4 p-8 rounded-md border border-outline shadow-xl">
                 <div className="login-form flex flex-col justify-center items-center">
                     <img className="self-start h-[60px] mb-4" src={logo.src} />
                     <h1 className="font-primary font-bold text-3xl text-center text-primary">Login</h1>
@@ -81,7 +81,7 @@ const Login = () => {
                                 <input type="checkbox" id="remember" />
                                 <label htmlFor="remember" className="mx-1.5 text-onbackground">Remember me</label>
                             </div>
-                            <Link href='./forgot_password' className="text-secondary text-onbackground">Forgot password?</Link>
+                            <Link href='./forgot-password' className="text-secondary text-onbackground">Forgot password?</Link>
                         </div>
 
                         <button type='submit' className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-full">submit</button>
