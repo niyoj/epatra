@@ -37,6 +37,10 @@ module.exports = {
 
       "outline": "var(--md-sys-color-outline)",
     },
+    fontFamily: {
+      "primary": "'Anek Devanagari', sans-serif",
+      "secondary":  "'Martel', serif",
+    },
     extend: {},
   },
   plugins: [require("@tailwindcss/forms")],

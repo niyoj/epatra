@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @layer base {
+    @import url('https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@200;400;500;600;700;800&family=Martel:wght@200;300;400;600;700;800;900&display=swap');
+    
     :root {
         --md-source: #184588;
         /* primary */
