@@ -19,7 +19,5 @@ class CreatePostArticleSerializer(serializers.ModelSerializer):
         print("---------------", value)
 
     def save(self, **kwargs):
-        print(self.validated_data)
-        if not hasattr(self.validated_data, 'is_article'):
-            kwargs['is_article'] = False
+        kwargs['is_article'] = self.validated_data.get('is_article', False)
         return super().save(**kwargs)
