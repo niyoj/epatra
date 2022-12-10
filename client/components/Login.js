@@ -3,24 +3,34 @@ import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
 import hero from "../public/login_hero.png";
 import logo from "../public/epatra.png";
+import { useFormik } from "formik";
+import { logInSchema} from "../schemas/login.js";
 
+const initialValues={
+    email:"",
+    password:"",
+}
 const Login = () => {
     useEffect(() => {
         document.body.classList.add("bg-primary-variant");
     });
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
+    const {values,touched, errors, handleBlur, handleChange,handleSubmit}=useFormik({
+        initialValues,
+        validationSchema: logInSchema,
+        onSubmit:(values,action)=>{
+            // console.log(values);
+            submitHandler();
+            action.resetForm();
+        }
+    })
     const [error, setError] = useState(null);
 
-    const submitHandler = async event => {
-        event.preventDefault();
+    const submitHandler = async () => {
         setError(null);
         try {
             const response = await fetch('http://localhost:8000/api/v1/auth/login/', {
                 method: 'POST',
-                body: JSON.stringify(formData),
+                body: JSON.stringify(values),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -41,24 +51,6 @@ const Login = () => {
         }
     }
 
-    const emailChangeHandler = (event) => {
-        setFormData((prevState) => {
-            return {
-                ...prevState,
-                email: event.target.value,
-            };
-        });
-    }
-
-    const passwordChangeHandler = (event) => {
-        setFormData((prevState) => {
-            return {
-                ...prevState,
-                password: event.target.value,
-            };
-        });
-    }
-
     return (
         <section className="inline-flex bg-background absolute top-1/2 left-1/2 -translate-y-2/4 -translate-x-2/4 p-8 rounded-md border border-outline">
                 <div className="login-form flex flex-col justify-center items-center">
@@ -70,14 +62,24 @@ const Login = () => {
                 
                     <p className="my-4 uppercase text-tertiary font-secondary font-bold">or</p>
 
-                    <form method='post' onSubmit={submitHandler} className="inline-flex flex-col items-center">
-                        <input className="bg-background  mb-2 w-80" type='email' name='email' placeholder='Your Email Address' onChange={emailChangeHandler} />
-                        <input className="bg-background mb-2 w-80" type='password' name='password' placeholder='Your Password' onChange={passwordChangeHandler} />
+                    <form method='post' onSubmit={handleSubmit} className="inline-flex flex-col items-center">
+                        <div className="">
+                        <input className="bg-background  mb-3 w-80" type='email' name='email' placeholder='Your Email Address' onChange={handleChange} value={values.email} onBlur={handleBlur} />
+                        {<div className="text-error italic">{errors.email && touched.email ? (
+                            <div>{errors.email}</div>
+                        ) : null}</div>}
+                        </div>
+                        <div>
+                        <input className="bg-background mb-2 w-80" type='password' name='password' placeholder='Your Password' onChange={handleChange} value={values.password} onBlur={handleBlur} />
+                              {<div className="text-error italic">{errors.password && touched.password ? (
+                                <div>{errors.password}</div>
+                            ) : null}</div>}
+                        </div>
 
                         <div className="flex justify-between w-full">
                             <div>
                                 <input type="checkbox" id="remember" />
-                                <label for="remember" className="mx-1.5 text-onbackground">Remember me</label>
+                                <label htmlFor="remember" className="mx-1.5 text-onbackground">Remember me</label>
                             </div>
                             <Link href='./forgot_password' className="text-secondary text-onbackground">Forgot password?</Link>
                         </div>
@@ -92,6 +94,25 @@ const Login = () => {
                     <img src={hero.src} alt="illustration of news" className="bject-contain relative top-1/2 left-1/2 -translate-x-2/4 -translate-y-2/4" />
                 </div>
         </section>
+        //   <form onSubmit={handleSubmit} >
+        //   <label className="" htmlhtmlFor="email"> Email: </label>
+        //   <input type='email' id="email" name='email' placeholder='Your Email Address' onChange={handleChange} value={values.email} onBlur={handleBlur} />
+        //   {<div className="text-error">{errors.email && touched.email ? (
+        //     <div>{errors.email}</div>
+        //    ) : null}</div>}
+        //    <br/>
+        //    <label className="" htmlhtmlFor="password">Password:</label>
+        //       <input type='password' id="password" name='password' placeholder='Your Password' onChange={handleChange} value={values.password} onBlur={handleBlur} />
+        //       {<div className="text-error">{errors.password && touched.password ? (
+        //      <div>{errors.password}</div>
+        //    ) : null}</div>}
+        //    <br/>
+        //       <Link href='/forgot_password' className="text-primary">Forgot Password ?</Link>
+        //       <br/>
+        //       <button type='submit'>submit</button>
+
+        //       <p className='error'>{error}</p>
+        //   </form>
     );
 }
 
