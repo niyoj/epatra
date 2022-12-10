@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }) {
   // uncomment the below line to make dark mode
   useEffect(() => {
     document.body.classList.add("bg-background"); 
-    document.body.classList.add("dark");
+    document.body.classList.add("root");
   });
 
   return (

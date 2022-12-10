@@ -2,38 +2,50 @@ import React, { useState } from "react";
 import FormData from "form-data";
 import axios from "axios";
 import Link from "next/link";
+import { useFormik } from "formik";
+import { signUpSchema } from "../schemas/signup";
+
+const initialValues ={
+  username:"",
+  email:"",
+  password:"",
+  cpassword:"",
+  fname:"",
+  lname:"",
+}
 
 const Register = () => {
-  const [userData, setUserData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    cpassword: "",
-    fname: "",
-    lname: "",
-    profileImg: "",
-  });
+  const {values,touched, errors, handleBlur, handleChange,handleSubmit} = useFormik({
+    initialValues,
+    validationSchema: signUpSchema,
+    onSubmit:(values,action)=>{
+      console.log(values)
+      handleBtnRegister();
+      action.resetForm();
+    }
+  })
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [userImg, setUserImg] = useState("");
   const handleUploadImage = (e) => {
     let img = e.target.files[0];
-    setUserData({ ...userData, profileImg: img });
+    setUserImg(img);
   };
-  const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
-  };
-  const handleBtnRegister = async (e) => {
-    e.preventDefault();
+  // const handleChange = (e) => {
+  //   setUserData({ ...userData, [e.target.name]: e.target.value });
+  // };
+
+  const handleBtnRegister = async () => {
     try {
-      if (userData.password === userData.cpassword) {
         setLoading(true);
         let bodyFormData = new FormData();
-        bodyFormData.append("username", userData.username);
-        bodyFormData.append("email", userData.email);
-        bodyFormData.append("password", userData.password);
-        bodyFormData.append("display_picture", userData.profileImg);
-        bodyFormData.append("first_name", userData.fname);
-        bodyFormData.append("last_name", userData.lname);
+        bodyFormData.append("username", values.username);
+        bodyFormData.append("email", values.email);
+        bodyFormData.append("password", values.password);
+        bodyFormData.append("display_picture", userImg);
+        bodyFormData.append("first_name", values.fname);
+        bodyFormData.append("last_name", values.lname);
         const res = await axios.post(
           "http://localhost:8000/api/v1/auth/register/",
           bodyFormData,
@@ -46,16 +58,6 @@ const Register = () => {
         console.log(res.data);
         setLoading(false);
         setSuccess(true);
-        setUserData({
-          username: "",
-          email: "",
-          password: "",
-          cpassword: "",
-          fname: "",
-          lname: "",
-          profileImg: "",
-        });
-      }
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +67,7 @@ const Register = () => {
     <div className="bg-gradient-to-r from-sky-500 to-indigo-500">
       <form
         className="form-input decoration-solid"
-        onSubmit={handleBtnRegister}
+        onSubmit={handleSubmit}
       >
         <label className="" htmlFor="username">
           Username:
@@ -76,11 +78,14 @@ const Register = () => {
           type="text"
           id="username"
           name="username"
-          placeholder="John"
+          placeholder="Your Username"
+          value={values.username}
           onChange={handleChange}
-          value={userData.username}
-          required
+          onBlur={handleBlur}
         />
+        {<div className="text-error">{errors.username && touched.username ? (
+             <div>{errors.username}</div>
+           ) : null}</div>}
         <br />
         <label className="" htmlFor="email">
           Email:
@@ -91,14 +96,17 @@ const Register = () => {
           type="email"
           id="email"
           name="email"
-          placeholder="John@gmial.com"
+          placeholder="Your Email"
+          value={values.email}
           onChange={handleChange}
-          value={userData.email}
-          required
+          onBlur={handleBlur}
         />
+        {<div className="text-error">{errors.email && touched.email ? (
+             <div>{errors.email}</div>
+           ) : null}</div>}
         <br />
         <label className="" htmlFor="password">
-          password:
+          Password:
         </label>
         <br />
         <input
@@ -106,14 +114,17 @@ const Register = () => {
           type="password"
           id="password"
           name="password"
-          placeholder="●●●●●"
+          placeholder="Password"
+          value={values.password}
           onChange={handleChange}
-          value={userData.password}
-          required
+          onBlur={handleBlur}
         />
+        {<div className="text-error">{errors.password && touched.password ? (
+             <div>{errors.password}</div>
+           ) : null}</div>}
         <br />
         <label className="" htmlFor="cpassword">
-          cpassword:
+          Confirm password:
         </label>
         <br />
         <input
@@ -121,11 +132,14 @@ const Register = () => {
           type="password"
           id="cpassword"
           name="cpassword"
-          placeholder="●●●●●"
+          placeholder="Confirm Password"
+          value={values.cpassword}
           onChange={handleChange}
-          value={userData.cpassword}
-          required
+          onBlur={handleBlur}
         />
+        {<div className="text-error">{errors.cpassword && touched.cpassword ? (
+             <div>{errors.cpassword}</div>
+           ) : null}</div>}
         <br />
         <label className="" htmlFor="fname">
           First name:
@@ -135,11 +149,15 @@ const Register = () => {
           type="text"
           id="fname"
           name="fname"
-          placeholder="John"
+          placeholder="Firstname"
+          value={values.fname}
           onChange={handleChange}
-          value={userData.fname}
-          required
+          onBlur={handleBlur}
         />
+        {<div className="text-error">{errors.fname && touched.fname ? (
+             <div>{errors.fname}</div>
+           ) : null}</div>}
+           <br/>
         <label className="" htmlFor="lname">
           Last name:
         </label>
@@ -148,11 +166,14 @@ const Register = () => {
           type="text"
           id="lname"
           name="lname"
-          placeholder="Doe"
+          placeholder="Lastname"
+          value={values.lname}
           onChange={handleChange}
-          value={userData.lname}
-          required
+          onBlur={handleBlur}
         />
+        {<div className="text-error">{errors.lname && touched.lname ? (
+             <div>{errors.lname}</div>
+           ) : null}</div>}
         <br />
         <br />
         <label htmlFor="myfile">Profile Image:</label>
@@ -163,6 +184,7 @@ const Register = () => {
           onChange={handleUploadImage}
         ></input>
         <br />
+        <br/>
         <button
           type="submit"
           disabled={loading}
