@@ -11,7 +11,7 @@ def validate_ratings(value):
         raise ValidationError("This field accepts ratings from 1-5 only")
  
 
-class Reviews(BaseModel):
+class Review(BaseModel):
     title = models.CharField(_("Reviews Title"), max_length=255)
     description = models.TextField()
     ratings = models.PositiveSmallIntegerField(validators=[validate_ratings])
