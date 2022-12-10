@@ -1,4 +1,7 @@
+import uuid
+
 from rest_framework import serializers
+from django.utils.text import slugify
 from .models import News, Tag
 
 
@@ -17,7 +20,13 @@ class CreatePostArticleSerializer(serializers.ModelSerializer):
     
     def validate_slug(self, value):
         print("---------------", value)
+    
+    def create(self, validated_data):
+        slug = slugify(self.validated_data.get('title', "")) + '-' + str(uuid.uuid1())
+        validated_data['slug'] = slug[:254] if len(slug) >= 255 else slug
+        return super().create(validated_data)
 
     def save(self, **kwargs):
         kwargs['is_article'] = self.validated_data.get('is_article', False)
+        
         return super().save(**kwargs)

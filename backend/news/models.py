@@ -11,7 +11,7 @@ from core.models import BaseModel
 # Create your models here.
 class News(BaseModel):
     title = models.CharField(_("News Title"), max_length=255)
-    slug = models.SlugField(_("Slug"), unique=True)
+    slug = models.SlugField(_("Slug"), unique=True, max_length=255)
     description = models.TextField()
     is_breaking_news = models.BooleanField(default=False)
     summary = models.TextField()
@@ -45,7 +45,6 @@ class News(BaseModel):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.is_approved = False
-        self.slug = slugify(self.title) + '-' + str(uuid.uuid1())
         if not self.is_article:
             self.is_approved = True
         super().save(force_insert, force_update, using, update_fields)
