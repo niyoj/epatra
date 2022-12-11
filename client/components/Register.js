@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useFormik } from "formik";
 import { signUpSchema } from "../schemas/signup";
+import { GoogleLogin } from '@react-oauth/google';
 
 const initialValues ={
   username:"",
@@ -15,11 +16,16 @@ const initialValues ={
 }
 
 const Register = () => {
+  const [page, setPage] = useState(1);
+  
+  const changePage = () => {
+    if (page == 2) setPage(3);
+    if (page == 1) setPage(2);
+  }
   const {values,touched, errors, handleBlur, handleChange,handleSubmit} = useFormik({
     initialValues,
     validationSchema: signUpSchema,
-    onSubmit:(values,action)=>{
-      console.log(values)
+    onSubmit:(values, action)=>{
       handleBtnRegister();
       action.resetForm();
     }
@@ -28,14 +34,12 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [userImg, setUserImg] = useState("");
+  
   const handleUploadImage = (e) => {
     let img = e.target.files[0];
     setUserImg(img);
   };
-  // const handleChange = (e) => {
-  //   setUserData({ ...userData, [e.target.name]: e.target.value });
-  // };
-
+  
   const handleBtnRegister = async () => {
     try {
         setLoading(true);
@@ -64,144 +68,73 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-sky-500 to-indigo-500">
-      <form
-        className="form-input decoration-solid"
-        onSubmit={handleSubmit}
-      >
-        <label className="" htmlFor="username">
-          Username:
-        </label>
-        <br />
-        <input
-          className=""
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Your Username"
-          value={values.username}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {<div className="text-error">{errors.username && touched.username ? (
-             <div>{errors.username}</div>
-           ) : null}</div>}
-        <br />
-        <label className="" htmlFor="email">
-          Email:
-        </label>
-        <br />
-        <input
-          className=""
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Your Email"
-          value={values.email}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {<div className="text-error">{errors.email && touched.email ? (
-             <div>{errors.email}</div>
-           ) : null}</div>}
-        <br />
-        <label className="" htmlFor="password">
-          Password:
-        </label>
-        <br />
-        <input
-          className=""
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Password"
-          value={values.password}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {<div className="text-error">{errors.password && touched.password ? (
-             <div>{errors.password}</div>
-           ) : null}</div>}
-        <br />
-        <label className="" htmlFor="cpassword">
-          Confirm password:
-        </label>
-        <br />
-        <input
-          className=""
-          type="password"
-          id="cpassword"
-          name="cpassword"
-          placeholder="Confirm Password"
-          value={values.cpassword}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {<div className="text-error">{errors.cpassword && touched.cpassword ? (
-             <div>{errors.cpassword}</div>
-           ) : null}</div>}
-        <br />
-        <label className="" htmlFor="fname">
-          First name:
-        </label>
-        <input
-          className=""
-          type="text"
-          id="fname"
-          name="fname"
-          placeholder="Firstname"
-          value={values.fname}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {<div className="text-error">{errors.fname && touched.fname ? (
-             <div>{errors.fname}</div>
-           ) : null}</div>}
-           <br/>
-        <label className="" htmlFor="lname">
-          Last name:
-        </label>
-        <input
-          className=""
-          type="text"
-          id="lname"
-          name="lname"
-          placeholder="Lastname"
-          value={values.lname}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {<div className="text-error">{errors.lname && touched.lname ? (
-             <div>{errors.lname}</div>
-           ) : null}</div>}
-        <br />
-        <br />
-        <label htmlFor="myfile">Profile Image:</label>
-        <input
-          type="file"
-          name="profileImg"
-          accept="image/"
-          onChange={handleUploadImage}
-        ></input>
-        <br />
-        <br/>
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-gradient-to-r from-sky-500 to-indigo-500"
-        >
-          {loading ? "Loading..." : "Submit"}
-        </button>
-        {success && (
-          <div>
-            Click here for{" "}
-            <Link href="/login" className="underline">
-              Login!
-            </Link>
-          </div>
-        )}
-      </form>
-    </div>
+    <section className="inline-flex bg-background absolute top-1/2 left-1/2 -translate-y-2/4 -translate-x-2/4 p-8 rounded-md border border-outline">
+      <div className="login-form flex flex-col justify-center items-center">
+          <h1 className="font-bold text-3xl text-center text-primary">Register</h1>
+          <p className="text-secondary text-center text-md mb-8">Know what's going around the globe...</p>
+
+          <GoogleLogin onSuccess={credentialResponse => {console.log(credentialResponse);}} onError={() => {console.log('Login Failed');}} />
+      
+          <p className="uppercase text-tertiary text-center text-md mt-4">or</p>
+
+          <form method='post' onSubmit={handleSubmit} className="inline-flex flex-col items-center">
+              <div className={`${page === 1 ? null : "hidden"}`}>
+                  <label className={`block font-extrabold mb-2 ${touched.email && errors.email ? "text-error": "text-onbackground"}`}>Email</label>
+                  <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.email && errors.email ? "border-error text-error" : "border-primary text-onbackground"}`} type='email' name='email' placeholder='Your Email Address' onChange={handleChange} value={values.email} onBlur={handleBlur} />
+                  <p className="block text-sm text-error text-right mt-1">&nbsp;{touched.email && errors.email ? errors.email: null }</p>
+              </div>
+
+              <div className={`${page === 1 ? null : "hidden"}`}>
+                  <label className={`block font-extrabold mb-2 ${touched.password && errors.password ? "text-error": "text-onbackground"}`}>Password</label>
+                  <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.password && errors.password ? "border-error text-error" : "border-primary text-onbackground"}`} type='password' name='password' placeholder='Your Password' onChange={handleChange} value={values.password} onBlur={handleBlur} />
+                  <p className="block text-sm text-error text-right mt-1">&nbsp;{touched.password && errors.password ? errors.password: null }</p>
+              </div>
+
+              <div className={`${page === 1 ? null : "hidden"}`}>
+                  <label className={`block font-extrabold mb-2 ${touched.cpassword && errors.cpassword ? "text-error": "text-onbackground"}`}>Confirm Your Password</label>
+                  <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.cpassword && errors.cpassword ? "border-error text-error" : "border-primary text-onbackground"}`} type='password' name='cpassword' placeholder='Re-Enter your Password' onChange={handleChange} value={values.cpassword} onBlur={handleBlur} />
+                  <p className="block text-sm text-error text-right mt-1">&nbsp;{touched.cpassword && errors.cpassword ? errors.cpassword: null }</p>
+              </div>
+
+              <div className={`${page === 2 ? null : "hidden"}`}>
+                  <label className={`block font-extrabold mb-2 ${touched.fname && errors.fname ? "text-error": "text-onbackground"}`}>First Name</label>
+                  <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.fname && errors.fname ? "border-error text-error" : "border-primary text-onbackground"}`} type='text' name='fname' placeholder='Your First Name' onChange={handleChange} value={values.fname} onBlur={handleBlur} />
+                  <p className="block text-sm text-error text-right mt-1">&nbsp;{touched.fname && errors.fname ? errors.fname: null }</p>
+              </div>
+
+              <div className={`${page === 2 ? null : "hidden"}`}>
+                  <label className={`block font-extrabold mb-2 ${touched.lname && errors.lname ? "text-error": "text-onbackground"}`}>Last Name</label>
+                  <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.lname && errors.lname ? "border-error text-error" : "border-primary text-onbackground"}`} type='text' name='lname' placeholder='Your Last Name' onChange={handleChange} value={values.lname} onBlur={handleBlur} />
+                  <p className="block text-sm text-error text-right mt-1">&nbsp;{touched.lname && errors.lname ? errors.lname: null }</p>
+              </div>
+
+              <div className={`${page === 2 ? null : "hidden"}`}>
+                  <label className={`block font-extrabold mb-2 ${touched.username && errors.username ? "text-error": "text-onbackground"}`}>Username</label>
+                  <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.username && errors.username ? "border-error text-error" : "border-primary text-onbackground"}`} type='text' name='username' placeholder='Your Username' onChange={handleChange} value={values.username} onBlur={handleBlur} />
+                  <p className="block text-sm text-error text-right mt-1">&nbsp;{touched.username && errors.username ? errors.username: null }</p>
+              </div>
+
+              <div className={`${page === 3 ? null : "hidden"}`}>
+                  <label className={`block font-extrabold ${touched.username && errors.username ? "text-error": "text-onbackground"}`}>Profile Image</label>
+                  <p className="text-tertiary mb-2">This step is completely optional</p>
+                  
+                  <label className="flex justify-center mt-4 mb-4">
+                    <div className="w-64 flex flex-col items-center px-4 py-6 bg-secondary text-onsecondary rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer">
+                        <svg className="w-10 h-10" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                        </svg>
+                        <span className="mt-2 text-base leading-normal">Select a file</span>
+                        <input type='file' className="hidden" name='profileImg' accept="image/png, image/gif, image/jpeg" onChange={handleUploadImage}/>
+                    </div>
+                  </label>
+              </div>
+
+              <button type={`${page === 3 ? "submit" : "button"}`} className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-full hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary" onClick={changePage} disabled={loading} >{page == 3 ? "submit" : "next"}</button>
+          </form>
+
+          <p className="mt-5">Already have an account? <Link className="text-primary font-bold" href="./login">Login</Link></p>
+      </div>
+    </section>
   );
 };
 

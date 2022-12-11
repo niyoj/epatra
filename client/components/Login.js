@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
 import hero from "../public/login_hero.png";
-import logo from "../public/epatra.png";
 import { useFormik } from "formik";
 import { logInSchema} from "../schemas/login.js";
 
