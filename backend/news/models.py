@@ -1,7 +1,9 @@
+import uuid
 from datetime import datetime
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
 
 from core.models import BaseModel
 
@@ -9,13 +11,13 @@ from core.models import BaseModel
 # Create your models here.
 class News(BaseModel):
     title = models.CharField(_("News Title"), max_length=255)
-    slug = models.SlugField(_("Slug"), unique=True)
+    slug = models.SlugField(_("Slug"), unique=True, max_length=255)
     description = models.TextField()
     is_breaking_news = models.BooleanField(default=False)
     summary = models.TextField()
     is_archived = models.BooleanField(default=False)
     archived_on = models.DateTimeField(null=True, blank=True)
-    archived_by = models.ForeignKey("auth0.MyUser", on_delete=models.PROTECT, related_name='deleted_articles', related_query_name='deleted_article')
+    archived_by = models.ForeignKey("auth0.MyUser", on_delete=models.PROTECT, related_name='deleted_articles', related_query_name='deleted_article', null=True, blank=True)
     react_count = models.PositiveBigIntegerField(default=0)
     view_count = models.PositiveBigIntegerField(default=0)
     is_draft = models.BooleanField(default=False)
@@ -42,14 +44,13 @@ class News(BaseModel):
     
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        super().save(force_insert, force_update, using, update_fields)
         self.is_approved = False
         if not self.is_article:
             self.is_approved = True
-        self.save()
+        super().save(force_insert, force_update, using, update_fields)
 
 class Tag(BaseModel):
-    name = models.SlugField(max_length=25)
+    name = models.SlugField(max_length=25, unique=True)
 
 
 class Category(BaseModel):
