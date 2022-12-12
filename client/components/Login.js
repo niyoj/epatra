@@ -47,7 +47,7 @@ const Login = () => {
                 localStorage.setItem('accessToken', data.access);
             }
         } catch (error) {
-            setError(error.message);
+            setError(error.message); 
         }
     }
 

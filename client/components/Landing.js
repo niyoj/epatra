@@ -1,8 +1,13 @@
 import React from "react";
+import Head from "next/head";
 import { useRouter } from "next/router";
-const Landing = () => {
+import NewsCards from "./NewsCards";
+
+const Landing = ({news}) => {
+
   const router = useRouter();
   return (
+    <>
     <div>
       <h4>Landing Page</h4>
       <button
@@ -21,6 +26,24 @@ const Landing = () => {
         <a className="underline">Register</a>
       </button>
     </div>
+
+
+
+    <div className="container mx-auto px-10 mb-8">
+      <Head>
+        <title>ePatra | The Ultimate News Portal</title>
+      </Head>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-8 col-span-1">
+          {/* {
+            news.map((data)=>
+              <NewsCards key={data.slug}/>
+            )
+          } */}
+        </div>
+      </div>
+    </div>
+    </>
   );
 };
 
