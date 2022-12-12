@@ -1,42 +1,32 @@
-// import dynamic from 'next/dynamic';
 import React,{useState} from 'react'
-import { Editor } from "react-draft-wysiwyg"
-import { EditorState } from 'draft-js';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-// import EasyMDE from 'easymde';
-// Import the Slate editor factory.
-// import { createEditor } from 'slate'
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
-// // Import the Slate components and React plugin.
-// import { Slate, Editable, withReact } from 'slate-react'
-
-
-// const initialValue = [
-//   {
-//     type: 'paragraph',
-//     children: [{ text: 'A line of text in a paragraph.' }],
-//   },
-// ]
-// const EasyMDE = dynamic(()=> import('easymde'),{ssr:false})
-// console.log(EasyMDE.render)
-// console.log(EasyMDE.render.prototype())
 const EditorMd = () => {
-  const [change, setChange] = useState("")
-  
-  // const [editor] = useState(() => withReact(createEditor()))
-  // console.log(editor);
-  // const Reveal = await (await import("reveal.js")).default
-  
-  // console.log(easymde)
+  const [markdown, setMarkdown] = useState("Welcome to Markdown editor")
   return (
-    <div>
-        <Editor
-        wrapperClassName="demo-wrapper"g
-        editorClassName="demo-editor"
-        onEditorStateChange={setChange(value)}
-      />
+    <>
+    
+    <div className='h-screen flex flex-col'>
+      <div className='h-screen flex flex-row justify-center items-center'>
+        <div>
+        <h1 className='font-bold text-3xl text-center text-primary'>Markdown format!</h1>
+        <textarea className='md:h-[700px] md:w-[700px] appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' value={markdown} onChange={(e)=>{
+          setMarkdown(e.target.value)
+        }}></textarea>
+        </div>
+        <div>
+          <h1 className='font-bold text-3xl text-center text-primary'>Demo</h1>
+            <div className='md:h-[700px] md:w-[700px] border  rounded-lg py-4 px-3 overflow-y-auto'><ReactMarkdown>{markdown}</ReactMarkdown></div>
+        </div>
+        <div className="pl-5 flex flex-col items-center justify-center">
+          <button className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-32 hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary" disabled={markdown===""}>Submit</button>
+          <button className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-32 hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary" disabled={markdown===""} onClick={()=>setMarkdown("")}>Clear</button>
+          
+        </div>
+        </div>
     </div>
+    </>
   )
 }
 
-export default EditorMd;
+export default EditorMd
