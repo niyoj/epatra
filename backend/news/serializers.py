@@ -3,10 +3,12 @@ import uuid
 from rest_framework import serializers
 from django.utils.text import slugify
 from .models import News, Tag
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 class CreatePostArticleSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(many=True, queryset=Tag.objects.all())
+    liked_by = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
     slug = serializers.SlugField(required=False)
 
     class Meta:
@@ -30,3 +32,7 @@ class CreatePostArticleSerializer(serializers.ModelSerializer):
         kwargs['is_article'] = self.validated_data.get('is_article', False)
         
         return super().save(**kwargs)
+
+
+class LikeNewsArticleSerializer(serializers.Serializer):
+    like = serializers.BooleanField(required=True)

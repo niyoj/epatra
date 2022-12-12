@@ -3,19 +3,30 @@ from core.mixins import ResponseMixin
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.decorators import api_view
 from django.urls import reverse
+from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.db.models import F
 
-from .serializers import CreatePostArticleSerializer
+from .serializers import CreatePostArticleSerializer, LikeNewsArticleSerializer
 from .models import News
 
 
 class GetCreateNewsArticleAPIView(APIView, ResponseMixin):
     serializer_class = CreatePostArticleSerializer
-    permission_classes = [IsAuthenticated]
     model = News
 
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        method = self.request.method.lower()
+        if not (method == 'get'):
+            permissions.append(IsAuthenticated())
+
+        return permissions
+
     def get_queryset(self, is_article=False):
-        return News.objects.filter(is_article=is_article)
+        return News.objects.filter(is_article=is_article, is_archived=False, is_approved=True, is_draft=False)
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -36,19 +47,86 @@ class GetCreateNewsArticleAPIView(APIView, ResponseMixin):
 
 
 class GetUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView, ResponseMixin):
-    queryset = News.objects.filter(is_archived=False)
+    queryset = News.objects.filter(
+        is_archived=False, is_approved=True, is_draft=False)
     lookup_url_kwarg = 'idx'
     http_method_names = ['get', 'put', 'patch', 'delete']
     serializer_class = CreatePostArticleSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return self.send_response(data=serializer.data, message='Fetched successfully')
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        method = self.request.method.lower()
+        if (method == 'patch' or method == 'delete' or method == 'put'):
+            permissions.append(IsAuthenticated())
 
-    def update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.send_response(data=super().update(request, *args, **kwargs).data, message='Updated successfully.')
-    
+        return permissions
+
+    def check_if_owner_superuser_or_staff(self, request, post=None):
+        if request.method.lower() == 'get':
+            return True
+        if post == None:
+            return False
+        if request.user.is_superuser or request.user.is_staff or post.created_by == request.user:
+            return True
+
+        return False
+
+    def get_object(self):
+        obj = super().get_object()
+        is_permitted = self.check_if_owner_superuser_or_staff(
+            self.request, obj)
+        if not is_permitted:
+            self.permission_denied(
+                request=self.request, message='You are not authorized for the action.', code='unauthorized')
+        return obj
+
+    # @method_decorator(permission_classes([IsAuthenticated]))
+    def get(self, request, *args, **kwargs):
+        return self.send_response(data=super().get(request, *args, **kwargs).data, message='Fetched successfully')
+
+    def put(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.send_response(super().patch(request, *args, **kwargs).data, message='Updated successfully.')
+
     def delete(self, request, *args, **kwargs):
         return self.send_response(data=super().delete(request, *args, **kwargs).data, message="Deleted successfully", status=status.HTTP_204_NO_CONTENT)
+
+
+class LikeUnlikeAPIView(APIView, ResponseMixin):
+    serializer_class = LikeNewsArticleSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request, idx, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        like_status = serializer.validated_data.get('like')
+        post = get_object_or_404(News, pk=idx)
+
+        if (like_status == True) and (post in request.user.liked_articles.all()):
+            return self.send_response(message='Post already liked', status=status.HTTP_400_BAD_REQUEST)
+
+        if (like_status == False) and (post not in request.user.liked_articles.all()):
+            return self.send_response(message='Post not liked yet.', status=status.HTTP_400_BAD_REQUEST)
+        message = ""
+        if like_status == False:
+            request.user.liked_articles.remove(post)
+            message = 'Article unliked successfully.'
+        else:
+            request.user.liked_articles.add(post)
+            message = 'Article liked successfully.'
+
+        return self.send_response(message=message)
+
+
+class IncreaseViewsAPIView(APIView, ResponseMixin):
+    def post(self, request, idx, *args, **kwargs):
+        if not idx:
+            return self.send_response(message='IDX not provided in url')
+
+        article = get_object_or_404(News, pk=idx)
+
+        article.view_count = F('view_count') + 1
+        article.save()
+        return self.send_response(message='View increased')
