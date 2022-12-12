@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from core.mixins import ResponseMixin
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
@@ -130,3 +130,11 @@ class IncreaseViewsAPIView(APIView, ResponseMixin):
         article.view_count = F('view_count') + 1
         article.save()
         return self.send_response(message='View increased')
+
+
+class BreakingNewsListAPIView(ListAPIView, ResponseMixin):
+    queryset = News.objects.filter(is_approved=True, is_archived=False, is_article=False, is_draft=False, is_breaking_news=True)
+    serializer_class = CreatePostArticleSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.send_response(data=super().get(request, *args, **kwargs).data, message='Breaking news fetched successfully.')
