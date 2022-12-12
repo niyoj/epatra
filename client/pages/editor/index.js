@@ -1,3 +1,3 @@
-import { Editor } from "../../components/index";
+import { EditorMd } from "../../components/index";
 
-export default Editor;
+export default EditorMd;
