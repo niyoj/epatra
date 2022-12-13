@@ -2,7 +2,7 @@ import uuid
 
 from rest_framework import serializers
 from django.utils.text import slugify
-from .models import News, Tag
+from .models import News, Tag, Category
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -36,3 +36,15 @@ class CreatePostArticleSerializer(serializers.ModelSerializer):
 
 class LikeNewsArticleSerializer(serializers.Serializer):
     like = serializers.BooleanField(required=True)
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'

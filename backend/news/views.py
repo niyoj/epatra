@@ -2,15 +2,15 @@ from rest_framework.views import APIView
 from core.mixins import ResponseMixin
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView, ListCreateAPIView
 from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.db.models import F
 
-from .serializers import CreatePostArticleSerializer, LikeNewsArticleSerializer
-from .models import News
+from .serializers import CreatePostArticleSerializer, LikeNewsArticleSerializer, TagSerializer, CategorySerializer
+from .models import News, Tag, Category
 
 
 class GetCreateNewsArticleAPIView(APIView, ResponseMixin):
@@ -134,8 +134,47 @@ class IncreaseViewsAPIView(APIView, ResponseMixin):
 
 
 class BreakingNewsListAPIView(ListAPIView, ResponseMixin):
-    queryset = News.objects.filter(is_approved=True, is_archived=False, is_article=False, is_draft=False, is_breaking_news=True)
+    queryset = News.objects.filter(
+        is_approved=True, is_archived=False, is_article=False, is_draft=False, is_breaking_news=True)
     serializer_class = CreatePostArticleSerializer
 
     def get(self, request, *args, **kwargs):
         return self.send_response(data=super().get(request, *args, **kwargs).data, message='Breaking news fetched successfully.')
+
+
+class TagListCreateAPIView(ListCreateAPIView, ResponseMixin):
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        method = self.request.method.lower()
+        if not (method == 'get'):
+            permissions.append(IsAuthenticated())
+
+        return permissions
+
+    def get(self, request, *args, **kwargs):
+        return self.send_response(data=super().get(request, *args, **kwargs).data, message='Tags fetch successful.')
+
+    def post(self, request, *args, **kwargs):
+        return self.send_response(super().post(request, *args, **kwargs).data, message='Tag creation successful.', status=status.HTTP_201_CREATED)
+
+
+class CategoryListCreateAPIView(ListCreateAPIView, ResponseMixin):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        method = self.request.method.lower()
+        if not (method == 'get'):
+            permissions.append(IsAuthenticated())
+
+        return permissions
+
+    def get(self, request, *args, **kwargs):
+        return self.send_response(data=super().get(request, *args, **kwargs).data, message='Tags fetch successful.')
+
+    def post(self, request, *args, **kwargs):
+        return self.send_response(super().post(request, *args, **kwargs).data, message='Tag creation successful.', status=status.HTTP_201_CREATED)
