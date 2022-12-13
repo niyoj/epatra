@@ -41,8 +41,6 @@ const Register = () => {
     if (page == 2 && errors.username===undefined && errors.fname===undefined && errors.lname===undefined) setPage(3);
     if (page == 1 && errors.email===undefined && errors.password===undefined && errors.cpassword===undefined) setPage(2);
   }
-
-  
   
   const handleUploadImage = (e) => {
     let img = e.target.files[0];
