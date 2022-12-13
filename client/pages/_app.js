@@ -6,7 +6,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 function MyApp({ Component, pageProps }) {
   // uncomment the below line to make dark mode
   useEffect(() => {
-    document.body.classList.add("root"); 
+    document.body.classList.add("root", "bg-primary-variant", "text-onbackground", "font-secondary"); 
     // document.body.classList.add("dark");
   });
 
