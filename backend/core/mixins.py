@@ -3,9 +3,9 @@ from rest_framework.response import Response
 
 
 class ResponseMixin:
-    def send_response(self, data={}, message="Success", status=rest_status.HTTP_200_OK):
+    def send_response(self, data=None, message="Success", status=rest_status.HTTP_200_OK):
         response = {}
-        if data:
+        if data is not None:
             response['data'] = data
         response['message'] = message
         return Response(response, status=status)

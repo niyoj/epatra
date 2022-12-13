@@ -28,6 +28,7 @@ class News(BaseModel):
     category = models.ForeignKey(
         "Category", on_delete=models.SET_NULL, null=True, blank=True, related_name='articles', related_query_name='article')
     tags = models.ManyToManyField("Tag", related_name='articles', related_query_name='article')
+    liked_by = models.ManyToManyField('auth0.MyUser', related_name='liked_articles', related_query_name='article')
 
     class Meta:
         verbose_name = _("News or Article")

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from rest_framework_simplejwt.tokens import RefreshToken
+from core.models import BaseModel
 import uuid
 
 
@@ -20,6 +21,8 @@ class MyUser(AbstractUser):
     display_picture = models.ImageField(
         upload_to=image_upload_path, null=True, blank=True
     )
+    ep = models.PositiveIntegerField(default=0, verbose_name="ePatra Points")
+
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
