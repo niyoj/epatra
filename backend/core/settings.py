@@ -51,7 +51,7 @@ THIRD_PARTY_APPS = [
     'cloudinary',
 ]
 
-CUSTOM_APPS = ["auth0", "news", "reviews"]
+CUSTOM_APPS = ["auth0", "news", "reviews", "reports"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
