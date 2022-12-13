@@ -8,40 +8,45 @@ const Landing = ({data}) => {
   const router = useRouter();
   return (
     <>
-    <div>
-      <h4>Landing Page</h4>
-      <button
+    <div className="bg-surface-variant">
+      <div className="py-5 flex flex-row-reverse">
+      <div className="pr-5">
+      <button className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-auto hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary"
         onClick={() => {
           router.push("/login");
         }}
       >
-        <a className="underline">Sign In</a>
-      </button>{" "}
-      <br />
-      <button
-        onClick={() => {
-          router.push("/register");
-        }}
-      >
-        <a className="underline">Register</a>
-      </button>
+        <a className="">Sign In</a>
+      </button>  
+      </div>
+      <div className="pr-10">
+
+        <button className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-auto hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary"
+          onClick={() => {
+            router.push("/register");
+          }}
+        >
+          <a className="">Register</a>
+        </button>
+      </div>
+      </div>
     </div>
 
 
 
-    <div className="container mx-auto px-10 mb-8">
+    <div className="flex flex-wrap">
       <Head>
         <title>ePatra | The Ultimate News Portal</title>
       </Head>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-8 col-span-1">
+      
           {
             data.map((news)=>
-              <NewsCards key={data.slug} news={news}/>
+              <NewsCards key={news.slug} news={news}/>
             )
           }
-        </div>
-      </div>
+
+          
+
     </div>
     </>
   );

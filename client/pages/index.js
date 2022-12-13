@@ -1,7 +1,8 @@
 import { Landing } from "../components/index";
 import React, { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { getNews } from "../services";
+
 export default function Home({data}) {
   // const [news, setNews] = useState("");
   React.useEffect(() => {
@@ -16,7 +17,7 @@ export default function Home({data}) {
         console.log(data)
         return (
           <>
-      <div>
+      <div className="bg-surface-variant">
         <Landing data={data}/>
       </div>
     </>
@@ -24,7 +25,7 @@ export default function Home({data}) {
 }
 export async function getStaticProps()
 {
-  const {data} = await getNews() || []
+  const {data} = await getNews()
   console.log(data);
   return {
     props: {data},

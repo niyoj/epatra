@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Navbar } from "../components";
 import "../styles/globals.css";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import "../interceptors/axios.js"
 
 function MyApp({ Component, pageProps }) {
   // uncomment the below line to make dark mode

@@ -7,7 +7,6 @@ import { signUpSchema } from "../schemas/signup";
 import { GoogleLogin } from '@react-oauth/google';
 import Loading from "./Loading";
 import { useRouter } from "next/router";
-import { COOKIE_NAME_PRERENDER_BYPASS } from "next/dist/server/api-utils";
 
 const initialValues ={
   username:"",

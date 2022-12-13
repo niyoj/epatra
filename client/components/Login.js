@@ -4,12 +4,16 @@ import { GoogleLogin } from '@react-oauth/google';
 import hero from "../public/login_hero.png";
 import { useFormik } from "formik";
 import { logInSchema} from "../schemas/login.js";
+import FormData from "form-data";
+import axios from "axios";
+import {useRouter} from "next/router";
 
 const initialValues = {
     email:"",
     password:"",
 }
 const Login = () => {
+    const router = useRouter();
     useEffect(() => {
         document.body.classList.add("bg-primary-variant");
     });
@@ -18,7 +22,9 @@ const Login = () => {
         initialValues,
         validationSchema: logInSchema,
         onSubmit:(values,action)=>{
+            console.log(values);
             submitHandler();
+            router.push("/dashboard");
             action.resetForm();
         }
     })
@@ -28,24 +34,29 @@ const Login = () => {
     const submitHandler = async () => {
         setError(null);
         try {
-            const response = await fetch('http://localhost:8000/api/v1/auth/login/', {
-                method: 'POST',
-                body: JSON.stringify(values),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const bodyFormData = new FormData();
+            bodyFormData.append("email", values.email);
+            bodyFormData.append("password", values.password);
+            const {data} = await axios.post(
+                "http://localhost:8000/api/v1/auth/login/",
+                bodyFormData,
+                  {
+                    headers: {
+                      "Content-type": "multipart/form-data",
+                    }
+                  },
+                  );
+                  console.log(data);
+                  
 
             if (!response.ok) {
                 throw new Error('Something went wrong');
             }
-
-            const data = await response.json();
-            console.log(data);
             if (typeof window !== 'undefined') {
                 localStorage.setItem('refreshToken', data.refresh);
                 localStorage.setItem('accessToken', data.access);
             }
+            
         } catch (error) {
             setError(error.message); 
         }

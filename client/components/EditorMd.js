@@ -30,14 +30,16 @@ const EditorMd = () => {
           {
             headers: {
               "Content-type": "multipart/form-data",
-              "Authorization": `Bearer ${accessToken}`,
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
           );
           console.log(res);
-          setMarkdown("")
-          setTitle("")
-          setSummary("")
+          if(res.status==200){
+            setMarkdown("")
+            setTitle("")
+            setSummary("")
+          }
     } catch (error) {
       console.error("Error making post")
     }
@@ -48,14 +50,14 @@ const EditorMd = () => {
 
       <div className='flex flex-col'>
       <label className={`block font-extrabold mb-2 text-onbackground`}>Title of the News/Article</label>
-        <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 border-primary text-onbackground`} type='Text' name='Text' placeholder='Title of news' onChange={(e)=> setTitle(e.target.value)}/>
+        <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 border-primary text-onbackground`} type='Text' name='Text' placeholder='Title of news' value={title} onChange={(e)=> setTitle(e.target.value)}/>
         
         <h1 className='font-bold text-2xl text-center text-primary'>Markdown format!</h1>
         <textarea className='md:h-96 md:w-96 appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' value={markdown} onChange={(e)=>{
           setMarkdown(e.target.value)
         }} placeholder="Your Description Here"></textarea>
         <h1 className='font-bold text-3xl text-primary'>Summary</h1>
-        <textarea className='md:h-80 md:w-80 appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' onChange={(e)=>setSummary(e.target.value)} placeholder="Your Summary Here"></textarea>
+        <textarea className='md:h-80 md:w-80 appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' value={summary} onChange={(e)=>setSummary(e.target.value)} placeholder="Your Summary Here"></textarea>
       </div>
 
       <div className='pl-9'>
