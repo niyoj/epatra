@@ -6,7 +6,7 @@ from .models import Report
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('title', 'reported_by', 'created_on', 'approve', 'decline')
+    list_display = ('title', 'reported_by', 'content_type', 'created_on', 'approve', 'decline')
 
     def approve(self, obj):
         link = reverse('report_approve_decline_view', kwargs={
