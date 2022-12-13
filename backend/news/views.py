@@ -50,6 +50,7 @@ class GetUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView, ResponseMixin):
     queryset = News.objects.filter(
         is_archived=False, is_approved=True, is_draft=False)
     lookup_url_kwarg = 'idx'
+    lookup_field = 'slug'
     http_method_names = ['get', 'put', 'patch', 'delete']
     serializer_class = CreatePostArticleSerializer
 
