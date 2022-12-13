@@ -1,26 +1,10 @@
 import React from "react";
 import { useRouter } from "next/router";
+import NewsCard from "./NewsCard";
+
 const Landing = () => {
-  const router = useRouter();
   return (
-    <div>
-      <h4>Landing Page</h4>
-      <button
-        onClick={() => {
-          router.push("/login");
-        }}
-      >
-        <a className="underline">Sign In</a>
-      </button>{" "}
-      <br />
-      <button
-        onClick={() => {
-          router.push("/register");
-        }}
-      >
-        <a className="underline">Register</a>
-      </button>
-    </div>
+    <NewsCard title="How to code news portal in 24 hours?" summary="Learning computer science helps students thrive in a rapidly changing world—more than 65% of young people will work in jobs that dont currently exist. Opportunities in the classroom and beyond."/>
   );
 };
 
