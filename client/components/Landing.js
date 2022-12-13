@@ -3,8 +3,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import NewsCards from "./NewsCards";
 
-const Landing = ({news}) => {
-
+const Landing = ({data}) => {
+  console.log(data);
   const router = useRouter();
   return (
     <>
@@ -35,11 +35,11 @@ const Landing = ({news}) => {
       </Head>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-8 col-span-1">
-          {/* {
-            news.map((data)=>
-              <NewsCards key={data.slug}/>
+          {
+            data.map((news)=>
+              <NewsCards key={data.slug} news={news}/>
             )
-          } */}
+          }
         </div>
       </div>
     </div>
