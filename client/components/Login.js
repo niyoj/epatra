@@ -55,6 +55,7 @@ const Login = () => {
             if (typeof window !== 'undefined') {
                 localStorage.setItem('refreshToken', data.refresh);
                 localStorage.setItem('accessToken', data.access);
+                localStorage.setItem('isLoggedIn', true);
             }
             
         } catch (error) {

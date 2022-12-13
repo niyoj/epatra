@@ -1,46 +1,45 @@
 import Link from "next/link";
-import React,{useState} from "react";
-import{GiHamburgerMenu} from 'react-icons/gi'
-import{IoMdClose} from 'react-icons/io'
+import React from "react";
+import ReactDOM from "react-dom";
+import logo from "../public/epatra.png";
+import avatar from "../public/avatar.png";
 
 const Navbar = () => {
-  const [isHamburger, setIsHamburger] = useState(false)
-  const handleHamburgerMenu =()=>{
-    setIsHamburger(!isHamburger);
-  }
-  return <div className="h-16 bg-onprimary-variant text-surface">
-    <nav className="p-4 h-16 shadow-xl md:flex md:items-center md:justify-between">
-      <div className="flex justify-between items-center">
-        <span className="text-2xl">
-        <img className="h-10 inline" src="" alt=""/>
-          <Link href="/">ePatra</Link> 
-        </span>
-        <span className="text-2xl cursor-pointer md:hidden block">
-          {isHamburger ?<IoMdClose color="white" onClick={handleHamburgerMenu}/> :<GiHamburgerMenu color="white" onClick={handleHamburgerMenu}/>}
-        </span>
+  const isLoggedIn = (typeof window !== 'undefined') ? localStorage.getItem("isLoggedIn") : false;
+
+  return (
+    <nav className="flex justify-between px-8 md:pd-4 py-2 bg-background text-onbackground border-b border:outline h-[60px]">
+      <div className="">
+        <img src={logo.src} className="h-[50px]" alt="Logo of epatra" />
       </div>
-      <ul className={`md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-onprimary-variant w-full left-0 md:w-auto md:py-0 my-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-300 ${isHamburger && "top-[40px] z-10 opacity-100"}`}>
-        <li className="mx-4 my-6 md:my-0">
-          <Link href="/" className="text-xl hover:text-secondary duration-500">Home</Link>
-        </li>
-        <li className="mx-4 my-6 md:my-0">
-          <Link href="/" className="text-xl hover:text-secondary duration-500">General</Link>
-        </li>
-        <li className="mx-4 my-6 md:my-0">
-          <Link href="/" className="text-xl hover:text-secondary duration-500">Business</Link>
-        </li>
-        <li className="mx-4 my-6 md:my-0">
-          <Link href="/" className="text-xl hover:text-secondary duration-500">Entertainment</Link>
-        </li>
-        <li className="mx-4 my-6 md:my-0">
-          <Link href="/" className="text-xl hover:text-secondary duration-500">Sports</Link>
-        </li>
-        <li className="mx-4 my-6 md:my-0">
-          <Link href="/" className="text-xl hover:text-secondary duration-500">Technology</Link>
-        </li>
-      </ul>
+
+      <div className="group relative">
+        <div className="h-[40px] border-2 rounded-full overflow-hidden cursor-pointer border-primary">
+          <img className="object-contain h-[40px]" src={avatar.src} />
+        </div>
+
+        <div className="w-5 h-5 absolute rotate-45 right-3 top-[45px] hidden bg-background border z-0 group-hover:block"></div>
+          
+        <div className="absolute top-[50px] w-[200px] right-0 bg-background border p-4 rounded hidden group-hover:block z-10">
+          <ul className={`capitalize text-secondary ${isLoggedIn ? null : "hidden"}`} >
+            <li className="hover:text-primary font-bold cursor-pointer">my progress</li>
+            <li className="hover:text-primary font-bold cursor-pointer">my account</li>
+            <li className="hover:text-primary font-bold cursor-pointer">logout</li>
+          </ul>
+
+          <ul className={`flex flex-col items-center ${isLoggedIn ? "hidden" : null}`}>
+            <li className="text-center pb-2">Login or Register to get started.</li>
+            <li>
+              <Link href="./register"><button className="bg-primary rounded-md text-onprimary px-4 py-2 capitalize text-xl">Register</button></Link>
+            </li>
+            <li className="pt-3">
+              <Link href="./login"><button className="bg-background rounded-md text-primary px-4 py-2 capitalize text-xl border-primary border-2">login</button></Link>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-  </div>;
+  )
 };
 
 export default Navbar;

@@ -40,8 +40,6 @@ const Register = () => {
     if (page == 2 && errors.username===undefined && errors.fname===undefined && errors.lname===undefined) setPage(3);
     if (page == 1 && errors.email===undefined && errors.password===undefined && errors.cpassword===undefined) setPage(2);
   }
-
-  
   
   const handleUploadImage = (e) => {
     let img = e.target.files[0];
@@ -79,7 +77,7 @@ const Register = () => {
   if(loading === true)
       return <Loading/>
   if(success === true){
-    router.push("/login")
+    router.push("/verification")
   }
   return (
     <section className="inline-flex bg-background absolute top-1/2 left-1/2 -translate-y-2/4 -translate-x-2/4 p-8 rounded-md border border-outline">
