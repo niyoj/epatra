@@ -4,12 +4,14 @@ import { GoogleLogin } from '@react-oauth/google';
 import hero from "../public/login_hero.png";
 import { useFormik } from "formik";
 import { logInSchema} from "../schemas/login.js";
+import { useRouter } from "next/router";
 
 const initialValues = {
     email:"",
     password:"",
 }
 const Login = () => {
+    const router = useRouter();
     useEffect(() => {
         document.body.classList.add("bg-primary-variant");
     });
@@ -24,6 +26,12 @@ const Login = () => {
     })
 
     const [error, setError] = useState(null);
+
+    if (typeof window !== 'undefined') {
+        if (localStorage.getItem("isLoggedIn") == "true") {
+            router.push("./");
+        }
+    }
 
     const submitHandler = async () => {
         setError(null);
@@ -47,6 +55,8 @@ const Login = () => {
                 localStorage.setItem('accessToken', data.access);
                 localStorage.setItem('isLoggedIn', true);
             }
+
+            router.push("./");
         } catch (error) {
             setError(error.message);
         }

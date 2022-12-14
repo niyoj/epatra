@@ -9,6 +9,12 @@ const Verification = () => {
 
     const [success, setSuccess] = useState(false);
     
+    if (typeof window !== 'undefined') {
+        if (localStorage.getItem("isLoggedIn") == "true") {
+            router.push("./");
+        }
+    }
+
     const handleBtn = async() => {
         try {
             setKey(router.query.token);
