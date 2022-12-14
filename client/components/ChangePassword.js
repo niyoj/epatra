@@ -20,6 +20,10 @@ const ChangePassword = () => {
             errors.password = "Password must be greater than 8 characters"
         }
 
+        if (!values.currpassword) {
+            errors.currpassword = "You cannot leave this empty";
+        }
+
         if (!values.cpassword) {
             errors.cpassword = "You cannot leave this empty";
         } else if (values.cpassword != values.password) {
@@ -35,11 +39,15 @@ const ChangePassword = () => {
     const handleFormSubmit = async(values) => {
         try {
             await axios.post("http://localhost:8000/api/v1/auth/change-password/", 
-                values,
+                {
+                    current_password: values.currpassword,
+                    new_password: values.password,
+                    confirm_password: values.cpassword,
+                },
                 {
                     headers: {
-                    "Content-type": "multipart/form-data",
-                    "Authorization": "Bearer "+ bearer,
+                        "Content-type": "multipart/form-data",
+                        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
                     },
                 },
             ).then((response) => {
@@ -54,6 +62,7 @@ const ChangePassword = () => {
         initialValues: {
             password: '',
             cpassword:'',
+            currpassword: '',
         },
         validate,
         onSubmit: values => {
@@ -66,6 +75,12 @@ const ChangePassword = () => {
             <h1 className="font-bold text-3xl text-center text-primary mb-4">Change Password</h1>
 
             <form method="post" className="inline-flex flex-col items-center" onSubmit={formik.handleSubmit}>
+                <div className="mb-4">
+                    <label className={`block font-extrabold mb-2`}>Current Password</label>
+                    <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 border-primary`} type='password' name='currpassword' placeholder='Enter your current password' value={formik.values.currpassword} onChange={formik.handleChange} onBlur={formik.handleBlur} />
+                    <p className="block text-sm text-error text-right mt-1">&nbsp;{formik.touched.currpassword && formik.errors.currpassword ? formik.errors.currpassword: null }</p>
+                </div>
+
                 <div className="mb-4">
                     <label className={`block font-extrabold mb-2`}>Password</label>
                     <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 border-primary`} type='password' name='password' placeholder='Enter your new password' value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} />

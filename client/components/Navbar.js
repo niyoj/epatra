@@ -8,9 +8,9 @@ import { getLoggedOut, getUserData } from "../services";
 const Navbar = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false)
   const [userEp, setUserEp] = useState("0");
-  const [username, setUsername] = useState("UserName")
+  const [username, setUsername] = useState("niyoj")
   const getUserDetail = async ()=>{
-    const {data} = await getUserData("UserName");
+    const {data} = await getUserData("niyoj");
     console.log(data);
     const ep = data.ep;
     const username = data.username;
@@ -52,7 +52,7 @@ const Navbar = () => {
           <ul className={`capitalize text-secondary ${isLoggedIn ? null : "hidden"}`} >
             <li className="hover:text-primary font-bold cursor-pointer">{username}</li>
             <li className="hover:text-primary font-bold cursor-pointer">my progress : {userEp}</li>
-            <li className="hover:text-primary font-bold cursor-pointer">my account</li>
+            <li className="hover:text-primary font-bold cursor-pointer"><Link href="/changepassword">change password</Link></li>
             <li className="hover:text-primary font-bold cursor-pointer" onClick={handleLogout}>logout</li>
           </ul>
 
