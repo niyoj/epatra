@@ -22,6 +22,8 @@ auth_urlpatterns = [
 ]
 
 user_urlpatterns = [
+    path('u/<str:username>/', views.UserRetrieveUpdateApiView.as_view(), name='get_update_user'),
+    path('u/<str:username>/consume-ep/', views.consume_ep, name='consume_ep')
 ]
 
 urlpatterns = [

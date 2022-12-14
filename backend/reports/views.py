@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import F
 
 from core.mixins import ResponseMixin
 from .serializers import ReportSerializer
@@ -45,6 +46,9 @@ def approve_decline_view(request, idx, status):
         return redirect(reverse("admin:{}_{}_changelist".format(obj._meta.app_label, obj._meta.model_name)))
     if status.lower() == 'approved':
         obj.status = True
+        if obj.reported_by:
+            obj.reported_by.ep = F('ep') + 5
+            obj.reported_by.save()
         obj.save()
         messages.success(request, 'Approved')
     else:

@@ -1,12 +1,16 @@
 from django.contrib.auth import get_user_model
+from django.db.models import F
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 from core.mixins import ResponseMixin
 
@@ -25,7 +29,7 @@ from .serializers import (
     UserSignUpSerializer,
     PasswordResetSerializer,
     PasswordResetChangeSerializer,
-    ChangePasswordSerializer,
+    ChangePasswordSerializer, UserDetailSerializer
 )
 import jwt
 from django.conf import settings
@@ -165,3 +169,35 @@ class ChangePasswordView(APIView, ResponseMixin):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return self.send_message_response(message='Password changed successfully.')
+
+
+class UserRetrieveUpdateApiView(RetrieveUpdateAPIView, ResponseMixin):
+    serializer_class = UserDetailSerializer
+    queryset = User.objects.filter(is_active=True)
+    lookup_field = 'username'
+    lookup_url_kwarg = 'username'
+    permission_classes = [IsAuthenticated, ] 
+
+    def get(self, request, *args, **kwargs):
+        return self.send_response(data=super().get(request, *args, **kwargs).data, message='User details fetched successfully.')
+    
+    def post(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        print(kwargs.get('username', None), request.user.username)
+        if kwargs.get('username', None) != request.user.username:
+            raise PermissionDenied("You can only edit your profile.")
+        return self.send_response(super().patch(request, *args, **kwargs).data, message='User details update successful.')
+
+
+@api_view(['POST'])
+def consume_ep(request, username):
+    ep_to_consume = int(request.data.get('ep', 0))
+    user = get_object_or_404(User, username=username)
+    if user.ep < ep_to_consume:
+        return Response({'message': 'Not enough EP.'}, status=400)
+    
+    user.ep = F('ep') - ep_to_consume
+    user.save()
+    return Response({'message': 'EP consumed.'}, status=200)
