@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.db.models import F
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -187,3 +189,15 @@ class UserRetrieveUpdateApiView(RetrieveUpdateAPIView, ResponseMixin):
         if kwargs.get('username', None) != request.user.username:
             raise PermissionDenied("You can only edit your profile.")
         return self.send_response(super().patch(request, *args, **kwargs).data, message='User details update successful.')
+
+
+@api_view(['POST'])
+def consume_ep(request, username):
+    ep_to_consume = int(request.data.get('ep', 0))
+    user = get_object_or_404(User, username=username)
+    if user.ep < ep_to_consume:
+        return Response({'message': 'Not enough EP.'}, status=400)
+    
+    user.ep = F('ep') - ep_to_consume
+    user.save()
+    return Response({'message': 'EP consumed.'}, status=200)
