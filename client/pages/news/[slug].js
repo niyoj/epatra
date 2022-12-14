@@ -11,6 +11,8 @@ let first;
 const NewsDetails = ({news}) => {
   const [isLoggedIn, setIsLoggedIn]  = useState(false);
   const [lastModified, setLastModified] = useState(new Date());
+  const [likeLen, setLikeLen] = useState((news.liked_by).length);
+  const [isLiked, setIsLiked] = useState(false)
   
   useEffect(() => {
       if (typeof window != undefined) {
@@ -30,7 +32,7 @@ const NewsDetails = ({news}) => {
       }
   }, []);  
 
-  const [isLiked, setIsLiked] = useState(false)
+  
   async function viewedCount(){
       const res=await increaseViews(news.id);
       console.log(res);
@@ -39,6 +41,11 @@ const NewsDetails = ({news}) => {
 
 
   const handleLikeBtn = async()=>{
+    if(isLiked){
+      setLikeLen(likeLen+1);
+    } else {
+      setLikeLen(likeLen-1)
+    }
     setIsLiked(!isLiked);
     const res = await LikePost(news.id,isLiked);
   }
@@ -62,7 +69,7 @@ const NewsDetails = ({news}) => {
         
         <div className='inline-flex items-center my-4'>
           <div className='inline-flex items-center font-bold text-tertiary mx-4'>{Math.ceil(news.view_count/2)} Views</div>
-          <div className='cursor-pointer inline-flex items-center'>{isLiked?<BiLike size={20} color={"#305da8"} onClick={isLoggedIn? handleLikeBtn : null} className="mx-2" />:<AiFillLike size={20} color={"#305da8"} onClick={isLoggedIn? handleLikeBtn : null}  className="mx-2"/>}{(news.liked_by).length}</div>
+          <div className='cursor-pointer inline-flex items-center'>{isLiked?<BiLike size={20} color={"#305da8"} onClick={isLoggedIn? handleLikeBtn : null} className="mx-2" />:<AiFillLike size={20} color={"#305da8"} onClick={isLoggedIn? handleLikeBtn : null}  className="mx-2"/>}{likeLen}</div>
         </div>
       </div>
       

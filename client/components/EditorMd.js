@@ -14,6 +14,7 @@ const EditorMd = () => {
   const [isArticle, setIsArticle] = useState(false)
   const [tags, setTags] = useState([])
   const [tagCol, setTagCol] = useState("");
+  const [isChecked, setIsChecked] = useState(false)
 
   const fetchTags = async()=>{
     const res = await getTags();
@@ -49,7 +50,8 @@ const EditorMd = () => {
       bodyFormData.append("description", markdown);
       bodyFormData.append("summary", summary);
       bodyFormData.append("is_article", isArticle);
-      bodyFormData.append("tags", tagCol);
+      if(tagCol !== "") bodyFormData.append("tags", tagCol);
+      bodyFormData.append("is_article", isChecked);
  
       const res = await axios.post(
         "http://localhost:8000/api/v1/news/n/",
@@ -66,10 +68,14 @@ const EditorMd = () => {
             setMarkdown("")
             setTitle("")
             setSummary("")
+            setIsChecked(false);
           }
     } catch (error) {
       console.error("Error making post")
     }
+  }
+  const handleTypeChange = ()=>{
+    setIsChecked(!isChecked)
   }
   return (
     <>
@@ -83,6 +89,7 @@ const EditorMd = () => {
           return <Tags tag = {tag} key ={tag.id} setTagCol={setTagCol}/>
         })
       }
+      <div>Article&nbsp;<input type="checkbox" value="Article" onClick={handleTypeChange} checked={ isChecked} /></div>
         <h1 className='font-bold text-2xl text-center text-primary'>Markdown format!</h1>
         <textarea className='md:h-96 md:w-96 appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' value={markdown} onChange={(e)=>{
           setMarkdown(e.target.value)
