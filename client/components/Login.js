@@ -31,6 +31,12 @@ const Login = () => {
 
     const [error, setError] = useState(null);
 
+    if (typeof window !== 'undefined') {
+        if (localStorage.getItem("isLoggedIn") == "true") {
+            router.push("./");
+        }
+    }
+
     const submitHandler = async () => {
         setError(null);
         try {
@@ -47,16 +53,15 @@ const Login = () => {
                   },
                   );
                   console.log(data);
-                  localStorage.setItem('refreshToken', data.refresh);
-                localStorage.setItem('accessToken', data.access);
-                localStorage.setItem('isLoggedIn', "true");
-                if(data.refresh!=="" && data.access!==""){
-                    router.push("/")
-                    const delay = ms => new Promise(res => setTimeout(res, ms));
-                    await delay(1000);
-                    window.location.reload();
-                }
-        } catch (error) {
+                  if(typeof window !== "undefined"){
+                      
+                      localStorage.setItem('refreshToken', data.refresh);
+                    localStorage.setItem('accessToken', data.access);
+                   localStorage.setItem('isLoggedIn', true);
+                  }
+            router.push("./");
+            window.location.reload();
+        } catch(error) {
             setError(error.message); 
         }
     }
