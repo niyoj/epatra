@@ -8,14 +8,17 @@ import { getLoggedOut, getUserData } from "../services";
 const Navbar = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false)
   const [userEp, setUserEp] = useState("0");
-  const [username, setUsername] = useState("niyoj")
+  const [username, setUsername] = useState("UserName")
+  const [displayPic, setDisplayPic] = useState("")
   const getUserDetail = async ()=>{
-    const {data} = await getUserData("niyoj");
+    const {data} = await getUserData("UserName");
     console.log(data);
     const ep = data.ep;
+    const displayPic = data.display_picture;
     const username = data.username;
     setUserEp(ep);
     setUsername(username);
+    setDisplayPic(displayPic)
   }
   useEffect(() => {
     if(typeof window !== "undefined") {
@@ -40,10 +43,10 @@ const Navbar = () => {
       <div className="">
         <Link href="/"><img src={logo.src} className="h-[50px]" alt="Logo of epatra" /></Link>
       </div>
-
       <div className="group relative">
         <div className="h-[40px] border-2 rounded-full overflow-hidden cursor-pointer border-primary">
-          <img className="object-contain h-[40px]" src={avatar.src} />
+          <img className="object-contain h-[40px]" src={(displayPic!=="")?`${displayPic}`:avatar.src} />
+          {/* <Link href="/"><img src={(displayPic!=="")?`${displayPic}`:logo.src} className="h-[50px]" alt="Logo of epatra" /></Link> */}
         </div>
 
         <div className="w-5 h-5 absolute rotate-45 right-3 top-[45px] hidden bg-background border z-0 group-hover:block"></div>
