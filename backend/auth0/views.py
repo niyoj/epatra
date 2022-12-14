@@ -183,6 +183,7 @@ class UserRetrieveUpdateApiView(RetrieveUpdateAPIView, ResponseMixin):
         return self.patch(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
-        if kwargs.get('username', None) is not request.user.username:
+        print(kwargs.get('username', None), request.user.username)
+        if kwargs.get('username', None) != request.user.username:
             raise PermissionDenied("You can only edit your profile.")
-        return super().patch(request, *args, **kwargs)
+        return self.send_response(super().patch(request, *args, **kwargs).data, message='User details update successful.')
