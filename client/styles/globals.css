@@ -238,4 +238,31 @@
         --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
         --md-sys-color-scrim: var(--md-sys-color-scrim-dark);
        }
+    .reader h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--md-sys-color-primary);
+        text-transform: capitalize;
+        margin-top: 1.5rem;
+    }
+
+    .reader h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--md-sys-color-primary);
+        text-transform: capitalize;
+        margin-top: 1rem;
+    }
+
+    .reader h3, h4, h5, h6 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--md-sys-color-primary);
+        text-transform: capitalize;
+        margin-top: .5rem;
+    }
+
+    .reader img {
+        margin: 1rem auto;
+    }
 }
