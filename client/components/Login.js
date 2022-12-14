@@ -24,8 +24,8 @@ const Login = () => {
         onSubmit:(values,action)=>{
             console.log(values);
             submitHandler();
-            router.push("/dashboard");
             action.resetForm();
+            
         }
     })
 
@@ -47,17 +47,15 @@ const Login = () => {
                   },
                   );
                   console.log(data);
-                  
-
-            if (!response.ok) {
-                throw new Error('Something went wrong');
-            }
-            if (typeof window !== 'undefined') {
-                localStorage.setItem('refreshToken', data.refresh);
+                  localStorage.setItem('refreshToken', data.refresh);
                 localStorage.setItem('accessToken', data.access);
-                localStorage.setItem('isLoggedIn', true);
-            }
-            
+                localStorage.setItem('isLoggedIn', "true");
+                if(data.refresh!=="" && data.access!==""){
+                    router.push("/")
+                    const delay = ms => new Promise(res => setTimeout(res, ms));
+                    await delay(1000);
+                    window.location.reload();
+                }
         } catch (error) {
             setError(error.message); 
         }

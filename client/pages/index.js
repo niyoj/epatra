@@ -17,7 +17,7 @@ export default function Home({data}) {
         console.log(data)
         return (
           <>
-      <div className="bg-surface-variant">
+      <div className="">
         <Landing data={data}/>
       </div>
     </>

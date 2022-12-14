@@ -23,7 +23,7 @@ const NewsCards = ({news}) => {
         </div>
         {/* CTA */}
         <div className='m-2'>
-        <button className=''><Link class="text-surface bg-tertiary px-3 py-1 rounded-md hover:bg-secondary" href={`/news/${news.slug}`}>Continue Reading!</Link></button>  
+        <button className=''><Link className="text-surface bg-tertiary px-3 py-1 rounded-md hover:bg-secondary" href={`/news/${news.slug}`}>Continue Reading!</Link></button>  
         </div>
       </div>
     </div>

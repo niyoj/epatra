@@ -1,14 +1,22 @@
-import { joinPaths } from '@remix-run/router'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import FormData from "form-data";
+import { useRouter } from 'next/router';
 import axios from 'axios';
 
 const EditorMd = () => {
+  const router = useRouter();
   const [markdown, setMarkdown] = useState("")
   const [title, setTitle] = useState("")
   const [summary, setSummary] = useState("")
   const [isArticle, setIsArticle] = useState(false)
+  useEffect(() => {
+    const isLoggedIn = (typeof window !== "undefined") ? localStorage.getItem("isLoggedIn") : false;
+    if(!isLoggedIn){
+      router.push("/login")
+    }
+  }, [])
+  
 
 
   const handleCreateNewsArticle = async()=>{

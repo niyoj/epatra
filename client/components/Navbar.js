@@ -1,16 +1,31 @@
 import Link from "next/link";
-import React from "react";
+import React,{useEffect,useState} from "react";
 import ReactDOM from "react-dom";
 import logo from "../public/epatra.png";
 import avatar from "../public/avatar.png";
+import { getLoggedOut } from "../services";
 
 const Navbar = () => {
-  const isLoggedIn = (typeof window !== 'undefined') ? localStorage.getItem("isLoggedIn") : false;
+  const [isLoggedIn, setisLoggedIn] = useState(false)
+  useEffect(() => {
+    if(typeof window !== "undefined") {
+      const LoggedIn = localStorage.getItem("isLoggedIn");
+      if(LoggedIn == "true") setisLoggedIn(true)
+    } else setisLoggedIn(false);
+  }, [isLoggedIn])
+  
+  const handleLogout = async()=>{
+    console.log("logout clicked");
+    const res = await getLoggedOut();
+    console.log(res.status);
+    localStorage.setItem("isLoggedIn","false");
+    window.location.reload();
+  }
 
   return (
     <nav className="flex justify-between px-8 md:pd-4 py-2 bg-background text-onbackground border-b border:outline h-[60px]">
       <div className="">
-        <img src={logo.src} className="h-[50px]" alt="Logo of epatra" />
+        <Link href="/"><img src={logo.src} className="h-[50px]" alt="Logo of epatra" /></Link>
       </div>
 
       <div className="group relative">
@@ -24,7 +39,7 @@ const Navbar = () => {
           <ul className={`capitalize text-secondary ${isLoggedIn ? null : "hidden"}`} >
             <li className="hover:text-primary font-bold cursor-pointer">my progress</li>
             <li className="hover:text-primary font-bold cursor-pointer">my account</li>
-            <li className="hover:text-primary font-bold cursor-pointer">logout</li>
+            <li className="hover:text-primary font-bold cursor-pointer" onClick={handleLogout}>logout</li>
           </ul>
 
           <ul className={`flex flex-col items-center ${isLoggedIn ? "hidden" : null}`}>

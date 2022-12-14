@@ -49,3 +49,21 @@ export const LikePost = async(id,state)=>{
       console.log(data);
   return data;
 }
+
+
+export const getLoggedOut = async()=>{
+  let bodyFormData = new FormData();
+  const refreshToken = localStorage.getItem("refreshToken")
+  bodyFormData.append("token",refreshToken)
+
+  const {data} = await axios.post(
+    `http://localhost:8000/api/v1/auth/logout/`,bodyFormData,{
+      headers: {
+        "Content-type": "multipart/form-data",
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }
+      );
+      console.log(data);
+  return data;
+}
