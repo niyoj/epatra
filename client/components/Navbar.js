@@ -11,13 +11,9 @@ const Navbar = () => {
   const [username, setUsername] = useState("")
   const [displayPic, setDisplayPic] = useState("")
   
-
-  if (typeof window !== 'undefined') {
-    setUsername(localStorage.getItem("username"));
-  }
-  
   const getUserDetail = async ()=>{
-    const {data} = await getUserData(username);
+    const user = localStorage.getItem("username")
+    const {data} = await getUserData(user);
     console.log(data);
     const ep = data.ep;
     const displayPic = data.display_picture;
