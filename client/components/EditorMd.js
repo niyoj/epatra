@@ -23,6 +23,7 @@ const EditorMd = () => {
     console.log(title);
     console.log(markdown);
     console.log(summary);
+
     try {
       const accessToken =localStorage.getItem("accessToken");
       console.log(accessToken);
@@ -53,31 +54,26 @@ const EditorMd = () => {
     }
   }
   return (
-    <>
-    <div className=' flex flex-row justify-center items-center'>
+    <div className='flex flex-col items-center py-8'>
 
-      <div className='flex flex-col'>
-      <label className={`block font-extrabold mb-2 text-onbackground`}>Title of the News/Article</label>
-        <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 border-primary text-onbackground`} type='Text' name='Text' placeholder='Title of news' value={title} onChange={(e)=> setTitle(e.target.value)}/>
+      <div className='flex flex-col mb-[100px]'>
+        <label className={`block font-extrabold mb-2 text-primary`}>Title of the News/Article</label>
+        <input className={`block font-primary text-3xl font-bold bg-primary-variant w-[50vw] border-0 border-b-2 focus:outline-0 border-primary text-onbackground`} type='Text' name='Text' placeholder='Title of news' value={title} onChange={(e)=> setTitle(e.target.value)}/>
         
-        <h1 className='font-bold text-2xl text-center text-primary'>Markdown format!</h1>
-        <textarea className='md:h-96 md:w-96 appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' value={markdown} onChange={(e)=>{
+        <p className='font-bold text-primary mb-2 mt-6'>Markdown format!</p>
+        <textarea className='bg-background h-[200px] text-onbackground rounded-md py-4 px-3 focus:outline-none' value={markdown} onChange={(e)=>{
           setMarkdown(e.target.value)
         }} placeholder="Your Description Here"></textarea>
-        <h1 className='font-bold text-3xl text-primary'>Summary</h1>
-        <textarea className='md:h-80 md:w-80 appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' value={summary} onChange={(e)=>setSummary(e.target.value)} placeholder="Your Summary Here"></textarea>
+        
+
+        <p className='font-bold text-primary mb-2 mt-6'>Summary</p>
+        <textarea className='bg-background text-onbackground rounded-md py-4 px-3 focus:outline-none h-[200px]' value={summary} onChange={(e)=>setSummary(e.target.value)} placeholder="Your Summary Here"></textarea>
       </div>
 
-      <div className='pl-9'>
-          <h1 className='font-bold text-3xl text-center text-primary'>Demo</h1>
-            <div className='md:h-96 md:w-96 border  rounded-lg py-4 px-3 overflow-y-auto'><ReactMarkdown>{markdown}</ReactMarkdown></div>
-        </div>
-        <div className="pl-5 flex flex-col items-center justify-center">
-          <button className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-32 hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary" disabled={markdown==="" || title==="" || summary===""} onClick={handleCreateNewsArticle}>Submit</button>
-          <button className="my-4 bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-32 hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary" disabled={markdown==="" || title==="" || summary===""} onClick={()=>{setTitle("");setSummary(""); setMarkdown("")}}>Clear</button>
+        <div className="flex flex-col items-center justify-center">
+          <button className="bg-primary text-onprimary px-6 py-2 rounded-md capitalize font-bold w-32 hov:-translate-x-1 disabled:cursor-not-allowed disabled:bg-tertiary" disabled={markdown==="" || title==="" || summary===""} onClick={handleCreateNewsArticle}>Submit</button>
         </div>
     </div>
-    </>
   )
 }
 
