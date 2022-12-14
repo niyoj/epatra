@@ -3,16 +3,29 @@ import React,{useEffect,useState} from "react";
 import ReactDOM from "react-dom";
 import logo from "../public/epatra.png";
 import avatar from "../public/avatar.png";
-import { getLoggedOut } from "../services";
+import { getLoggedOut, getUserData } from "../services";
 
 const Navbar = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false)
+  const [userEp, setUserEp] = useState("0");
+  const [username, setUsername] = useState("UserName")
+  const getUserDetail = async ()=>{
+    const {data} = await getUserData("UserName");
+    console.log(data);
+    const ep = data.ep;
+    const username = data.username;
+    setUserEp(ep);
+    setUsername(username);
+  }
   useEffect(() => {
     if(typeof window !== "undefined") {
       const LoggedIn = localStorage.getItem("isLoggedIn");
-      if(LoggedIn == "true") setisLoggedIn(true)
+      if(LoggedIn == "true"){
+        setisLoggedIn(true);
+        getUserDetail()
+      } 
     } else setisLoggedIn(false);
-  }, [isLoggedIn])
+  }, [])
   
   const handleLogout = async()=>{
     console.log("logout clicked");
@@ -37,7 +50,8 @@ const Navbar = () => {
           
         <div className="absolute top-[50px] w-[200px] right-0 bg-background border p-4 rounded hidden group-hover:block z-10">
           <ul className={`capitalize text-secondary ${isLoggedIn ? null : "hidden"}`} >
-            <li className="hover:text-primary font-bold cursor-pointer">my progress</li>
+            <li className="hover:text-primary font-bold cursor-pointer">{username}</li>
+            <li className="hover:text-primary font-bold cursor-pointer">my progress : {userEp}</li>
             <li className="hover:text-primary font-bold cursor-pointer">my account</li>
             <li className="hover:text-primary font-bold cursor-pointer" onClick={handleLogout}>logout</li>
           </ul>

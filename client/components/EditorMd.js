@@ -3,6 +3,8 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import FormData from "form-data";
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { getTags } from '../services';
+import { Tags } from './Tags';
 
 const EditorMd = () => {
   const router = useRouter();
@@ -10,13 +12,29 @@ const EditorMd = () => {
   const [title, setTitle] = useState("")
   const [summary, setSummary] = useState("")
   const [isArticle, setIsArticle] = useState(false)
+  const [tags, setTags] = useState([])
+  const [tagCol, setTagCol] = useState("");
+
+  const fetchTags = async()=>{
+    const res = await getTags();
+    const data = res.data;
+    setTags(data);
+    console.log(tags);
+  }
   useEffect(() => {
-    const isLoggedIn = (typeof window !== "undefined") ? localStorage.getItem("isLoggedIn") : false;
-    if(!isLoggedIn){
-      router.push("/login")
+    (typeof window !== "undefined") ? localStorage.getItem("isLoggedIn") : false;
+    if(typeof window !== "undefined"){
+      const state = localStorage.getItem("isLoggedIn")
+      if(state == "false"){
+        router.push("/login");
+      }
+      fetchTags(); 
     }
   }, [])
   
+  // const handleTags = (id)=>{
+  //   setTagCol(id);
+  // }
 
 
   const handleCreateNewsArticle = async()=>{
@@ -26,12 +44,13 @@ const EditorMd = () => {
     try {
       const accessToken =localStorage.getItem("accessToken");
       console.log(accessToken);
-      let bodyFormData = new FormData();
+      let bodyFormData = new FormData(); 
       bodyFormData.append("title", title);
       bodyFormData.append("description", markdown);
       bodyFormData.append("summary", summary);
       bodyFormData.append("is_article", isArticle);
-
+      bodyFormData.append("tags", tagCol);
+ 
       const res = await axios.post(
         "http://localhost:8000/api/v1/news/n/",
         bodyFormData,
@@ -59,7 +78,11 @@ const EditorMd = () => {
       <div className='flex flex-col'>
       <label className={`block font-extrabold mb-2 text-onbackground`}>Title of the News/Article</label>
         <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 border-primary text-onbackground`} type='Text' name='Text' placeholder='Title of news' value={title} onChange={(e)=> setTitle(e.target.value)}/>
-        
+        {
+        tags.map((tag)=>{
+          return <Tags tag = {tag} key ={tag.id} setTagCol={setTagCol}/>
+        })
+      }
         <h1 className='font-bold text-2xl text-center text-primary'>Markdown format!</h1>
         <textarea className='md:h-96 md:w-96 appearance-none block bg-onsurface-variant text-secondary-variant border  rounded-lg py-4 px-3 focus:outline-none' value={markdown} onChange={(e)=>{
           setMarkdown(e.target.value)

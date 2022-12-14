@@ -35,6 +35,19 @@ export const increaseViews = async(id)=>{
 }
 
 
+export const getTags = async()=>{
+  const {data} = await axios.get(
+    `http://localhost:8000//api/v1/tags/t/`,{
+      headers: {
+        "Content-type": "multipart/form-data",
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }
+      );
+  return data;
+}
+
+
 export const LikePost = async(id,state)=>{
   let bodyFormData = new FormData();
   bodyFormData.append("like",state)
@@ -58,6 +71,20 @@ export const getLoggedOut = async()=>{
 
   const {data} = await axios.post(
     `http://localhost:8000/api/v1/auth/logout/`,bodyFormData,{
+      headers: {
+        "Content-type": "multipart/form-data",
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }
+      );
+      console.log(data);
+  return data;
+}
+
+
+export const getUserData= async(username)=>{
+  const {data} = await axios.get(
+    `http://localhost:8000/api/v1/user/u/${username}/`,{
       headers: {
         "Content-type": "multipart/form-data",
         "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
