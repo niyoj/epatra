@@ -30,7 +30,7 @@ const Navbar = () => {
   const handleLogout = async()=>{
     console.log("logout clicked");
     const res = await getLoggedOut();
-    console.log(res.status);
+    
     localStorage.setItem("isLoggedIn","false");
     window.location.reload();
   }
@@ -59,10 +59,10 @@ const Navbar = () => {
           <ul className={`flex flex-col items-center ${isLoggedIn ? "hidden" : null}`}>
             <li className="text-center pb-2">Login or Register to get started.</li>
             <li>
-              <Link href="./register"><button className="bg-primary rounded-md text-onprimary px-4 py-2 capitalize text-xl">Register</button></Link>
+              <Link href="/register"><button className="bg-primary rounded-md text-onprimary px-4 py-2 capitalize text-xl">Register</button></Link>
             </li>
             <li className="pt-3">
-              <Link href="./login"><button className="bg-background rounded-md text-primary px-4 py-2 capitalize text-xl border-primary border-2">login</button></Link>
+              <Link href="/login"><button className="bg-background rounded-md text-primary px-4 py-2 capitalize text-xl border-primary border-2">login</button></Link>
             </li>
           </ul>
         </div>
