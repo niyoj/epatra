@@ -9,8 +9,10 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from .models import MyUser
 
 from core.mixins import ResponseMixin
 
@@ -201,3 +203,21 @@ def consume_ep(request, username):
     user.ep = F('ep') - ep_to_consume
     user.save()
     return Response({'message': 'EP consumed.'}, status=200)
+
+
+
+class GetUserDetail(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    def get(request, *args, **kwargs):
+        User =  MyUser.get(request.user.id)
+        serializer = UserDetailSerializer(User, context={"request":"request"})
+        return Response(serializer.data)
+
+@api_view(['POST'])
+def increase_ep(request, username):
+    ep_to_increase = int(request.data.get('ep', 0))
+    user = get_object_or_404(User, username=username)
+    user.ep = F('ep') + ep_to_increase
+    user.save()
+    return Response({'message': 'EP increased.'}, status=200)

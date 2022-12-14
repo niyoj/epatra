@@ -8,18 +8,30 @@ import { getLoggedOut, getUserData } from "../services";
 const Navbar = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false)
   const [userEp, setUserEp] = useState("0");
-  const [username, setUsername] = useState("UserName")
+  const [username, setUsername] = useState("")
   const [displayPic, setDisplayPic] = useState("")
+  
+
+  if (typeof window !== 'undefined') {
+    setUsername(localStorage.getItem("username"));
+  }
+  
   const getUserDetail = async ()=>{
-    const {data} = await getUserData("UserName");
+    const {data} = await getUserData(username);
     console.log(data);
     const ep = data.ep;
     const displayPic = data.display_picture;
     const username = data.username;
     setUserEp(ep);
     setUsername(username);
-    setDisplayPic(displayPic)
+
+    if (displayPic == null) {
+      setDisplayPic(avatar.src);
+    } else {
+      setDisplayPic(displayPic);
+    }
   }
+
   useEffect(() => {
     if(typeof window !== "undefined") {
       const LoggedIn = localStorage.getItem("isLoggedIn");

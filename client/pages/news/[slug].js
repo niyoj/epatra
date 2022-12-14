@@ -13,8 +13,9 @@ const NewsDetails = ({news}) => {
   const [lastModified, setLastModified] = useState(new Date());
   const [likeLen, setLikeLen] = useState((news.liked_by).length);
   const [isLiked, setIsLiked] = useState(false)
-  const fechAlreadyLiked =async ()=>{
-    const {data} = await getUserData("UserName");
+  
+  const fechAlreadyLiked = async ()=>{
+    const {data} = await getUserData(localStorage.getItem("username"));
     console.log(data.id);
     console.log(news.liked_by)
     if((news.liked_by).includes(`${data.id}`)){
