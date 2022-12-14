@@ -11,6 +11,7 @@ import {useRouter} from "next/router";
 const initialValues = {
     email:"",
     password:"",
+    username: "",
 }
 const Login = () => {
     const router = useRouter();
@@ -58,6 +59,7 @@ const Login = () => {
                       localStorage.setItem('refreshToken', data.refresh);
                     localStorage.setItem('accessToken', data.access);
                    localStorage.setItem('isLoggedIn', true);
+                   localStorage.setItem('username', values.username);
                   }
             router.push("./");
             window.location.reload();
@@ -77,6 +79,11 @@ const Login = () => {
                 <p className="uppercase text-tertiary text-center text-md mt-4">or</p>
 
                 <form method='post' onSubmit={handleSubmit} className="inline-flex flex-col items-center">
+                    <div className="mb">
+                        <label className={`block font-extrabold mb-2 ${touched.username && errors.username ? "text-error": "text-onbackground"}`}>Username</label>
+                        <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.username && errors.username ? "border-error text-error" : "border-primary text-onbackground"}`} type='text' name='username' placeholder='Your Username' onChange={handleChange} value={values.username} onBlur={handleBlur} />
+                    </div>
+
                     <div className="">
                         <label className={`block font-extrabold mb-2 ${touched.email && errors.email ? "text-error": "text-onbackground"}`}>Email</label>
                         <input className={`block bg-background w-80 border-0 border-b-2 focus:outline-0 ${touched.email && errors.email ? "border-error text-error" : "border-primary text-onbackground"}`} type='email' name='email' placeholder='Your Email Address' onChange={handleChange} value={values.email} onBlur={handleBlur} />
