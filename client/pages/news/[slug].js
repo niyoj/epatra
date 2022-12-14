@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import Loading from '../../components/Loading';
-import { getNews,getNewsDetails,increaseViews,LikePost } from '../../services';
+import { getNews,getNewsDetails,increaseViews,LikePost,getUserData } from '../../services';
 import {BiLike} from 'react-icons/bi'
 import {BiShow} from 'react-icons/bi'
 import {AiFillLike} from 'react-icons/ai'
@@ -13,8 +13,20 @@ const NewsDetails = ({news}) => {
   const [lastModified, setLastModified] = useState(new Date());
   const [likeLen, setLikeLen] = useState((news.liked_by).length);
   const [isLiked, setIsLiked] = useState(false)
-  
+  const fechAlreadyLiked =async ()=>{
+    const {data} = await getUserData("UserName");
+    console.log(data.id);
+    console.log(news.liked_by)
+    if((news.liked_by).includes(`${data.id}`)){
+      console.log("here")
+      setIsLiked(isLiked);
+    }
+    else{
+      console.log("Not Here")
+    }
+  }
   useEffect(() => {
+    fechAlreadyLiked();
       if (typeof window != undefined) {
       if (localStorage.getItem("accessToken") != undefined) {
         setIsLoggedIn(true);
@@ -30,6 +42,7 @@ const NewsDetails = ({news}) => {
           setIsLiked(true)
         }
       }
+
   }, []);  
 
   
