@@ -70,6 +70,7 @@ const EditorMd = () => {
             setMarkdown("")
             setTitle("")
             setSummary("")
+            setActiveTag("none")
             setIsChecked(false);
           }
     } catch (error) {
