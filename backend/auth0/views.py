@@ -3,10 +3,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 from core.mixins import ResponseMixin
 
@@ -25,7 +27,7 @@ from .serializers import (
     UserSignUpSerializer,
     PasswordResetSerializer,
     PasswordResetChangeSerializer,
-    ChangePasswordSerializer,
+    ChangePasswordSerializer, UserDetailSerializer
 )
 import jwt
 from django.conf import settings
@@ -165,3 +167,22 @@ class ChangePasswordView(APIView, ResponseMixin):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return self.send_message_response(message='Password changed successfully.')
+
+
+class UserRetrieveUpdateApiView(RetrieveUpdateAPIView, ResponseMixin):
+    serializer_class = UserDetailSerializer
+    queryset = User.objects.filter(is_active=True)
+    lookup_field = 'username'
+    lookup_url_kwarg = 'username'
+    permission_classes = [IsAuthenticated, ] 
+
+    def get(self, request, *args, **kwargs):
+        return self.send_response(data=super().get(request, *args, **kwargs).data, message='User details fetched successfully.')
+    
+    def post(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        if kwargs.get('username', None) is not request.user.username:
+            raise PermissionDenied("You can only edit your profile.")
+        return super().patch(request, *args, **kwargs)

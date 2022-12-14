@@ -130,6 +130,9 @@ class IncreaseViewsAPIView(APIView, ResponseMixin):
 
         article.view_count = F('view_count') + 1
         article.save()
+        if request.user.is_authenticated:
+            request.user.ep = F('ep') + 1
+            request.user.save()
         return self.send_response(message='View increased')
 
 

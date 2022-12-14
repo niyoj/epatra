@@ -153,3 +153,9 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.save()
         return user
 
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        read_only_fields=("is_active", 'is_verified', 'is_google_linked', 'email', 'ep', 'id', 'is_staff', 'is_superuser', 'date_joined', 'last_login',)
+        exclude=('password', 'groups', 'user_permissions')
